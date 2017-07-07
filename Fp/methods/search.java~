@@ -1,0 +1,91 @@
+import java.sql.*;
+import java.util.Scanner;
+public class search<requestthestate, requestresponce>  {
+
+	public  search(requestthestate request,requestresponce responce){
+		
+	// JDBC driver name and database URL
+	   final String JDBC_DRIVER = "oracle.jdbc.driver.OracleDriver";  
+	    final String DB_URL = "jdbc:oracle:thin:@fourier.cs.iit.edu:1521:orcl";
+	   
+
+	   //  Database credentials
+	    final String  a = "a";
+	    final String PASS = "m";
+	   
+	
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Please enter your current state (delivery address)");
+		String input1= sc.next();
+		
+		
+		sc.close();
+		
+		Connection conn = null;
+		Statement stmt = null;
+		   try{
+		      //STEP 2: Register JDBC driver
+		      
+			   Class.forName("oracle.jdbc.driver.OracleDriver");
+
+		      //STEP 3: Open a connection
+		      System.out.println("Connecting to a selected database");
+		      conn = DriverManager.getConnection(DB_URL, a, PASS);
+		      System.out.println("Connected database successfully！");
+		      
+		    //STEP 4:  display for available the product
+		      ResultSet rs = stmt.executeQuery("select state from address");
+    		  rs.next();
+    		  
+              String v =rs.getString("state");
+              
+		      if(input1==v){
+		      
+
+		      
+		      System.out.println("doing the search");
+		      Statement prep = conn.createStatement();
+		      
+
+  String state = rs.getString("state");
+		      
+   System.out.println(state);
+   System.out.println("the sate print out successful");
+   int addressid = rs.getInt("addressid");
+   System.out.println(addressid);
+   
+   prep.executeQuery("select state  FROM address table WHERE ="+state);
+   
+   ResultSet rs1 = stmt.executeQuery("select product_name from product");
+	  rs1.next();
+   String w =rs1.getString("product_name");
+    System.out.print(w);
+    
+	//	prep.executeQuery("select state  FROM address table WHERE ="+state);
+
+		      }
+		      
+		   }catch(SQLException se){
+			      //Handle errors for JDBC
+			      se.printStackTrace();
+			   }catch(Exception e){
+			      //Handle errors for Class.forName
+			      e.printStackTrace();
+			   }finally{
+			      //finally block used to close resources
+			      try{
+			         if(stmt!=null)
+			            conn.close();
+			      }catch(SQLException se){
+			      }
+			      try{
+			         if(conn!=null)
+			            conn.close();
+			      }catch(SQLException se){
+			         se.printStackTrace();
+			      }//end finally try
+			   }//end try
+			   System.out.println("Goodbye!");
+	}      
+	//}//end the main
+}//end the search 
